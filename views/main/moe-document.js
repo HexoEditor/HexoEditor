@@ -300,6 +300,7 @@ $(() => {
                             type: 'question',
                             buttons: [__("Yes"), __("No")],
                             title: __("Confirm"),
+                            cancelId: -1,
                             message: __("File changed by another program, reload?")
                         }
                     ) === 0;
@@ -313,7 +314,15 @@ $(() => {
                     return;
                 }
 
+                let pos = window.editor.getCursor();
+                let editorScroll = document.querySelector('.CodeMirror-vscrollbar');
+                let scrollpos = editorScroll.scrollTop;
                 window.editor.setValue(s);
+                window.editor.setCursor(pos);
+
+                if (scrollpos > 0)
+                    editorScroll.scrollTop = scrollpos;
+
                 w.changed = false;
                 w.window.setDocumentEdited(false);
                 window.updatePreview(true);
